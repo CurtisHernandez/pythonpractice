@@ -1,0 +1,48 @@
+## THE CODE
+## this does not work and is not finished
+## turns out that making a 3d matrix just makes it really hard to do the random iterations
+## maybe once this is a thing that I can make references to and have the machine learn from, it'll be better
+import numpy
+import random
+# I will need this function later
+def makeCoordinates():
+    coordinates = [list(range(0,4)), list(range(0,4)), list(range(0,4))]
+    for i in coordinates:
+        random.shuffle(i)
+    return coordinates
+
+# then we input the values for each attribute
+att1 = ["625", "775", "925", "1075"]
+att2 = ["dm", "ma", "rs", "tv"]
+att3 = ["Eddie", "Gilda", "Iva", "Julie"]
+
+# put in the rules you know
+falses = numpy.zeros((4,4,4)) # where I can put "don't put stuff here" values
+trues = numpy.zeros((4,4,4)) # where I can put "do put stuff here" values
+trues[att1.index('925'),...,att3.index('Gilda')]=1 # rule 2
+trues[att1.index('925'),att2.index('dm'),...]=1 # rule 4
+falses[0,att2.index('rs'),...]=1 # rule 1 part 1
+falses[3,att2.index('ma'),...]=1 # rule 1 part 2
+falses[0,...,att3.index('Iva')]=1
+falses[3,...,att3.index('Julie')]=1
+keeptrying = 0
+while keeptrying == 0:
+    testarray = numpy.zeros((4,4,4))
+    print('I made a test array')
+    coordinates = makeCoordinates()
+    print('I made some fake coordinates')
+    for j in range(0,4):
+        speccoor = [coordinates[0][j],coordinates[1][j],coordinates[2][j]]
+        testarray[speccoor[0]][speccoor[1]][speccoor[2]] = 1
+    checkfalse = testarray + falses
+    if 2 in checkfalse:
+        print('But they clashed with the ones I knew were false')
+        print('Starting over')
+        continue
+    checktrue = testarray - trues
+    if -1 in checktrue:
+        print('But they did not have the ones I knew were true')
+        print('Starting over')
+        continue
+    keeptrying = 1
+print(testarray)

@@ -1,0 +1,182 @@
+import math
+from fractions import Fraction
+
+def combinationNumber(n,k):
+    return int(math.factorial(n) / (math.factorial(k) * math.factorial(n - k)))
+
+def permutationNumber(n,k):
+    return int(math.factorial(n) / math.factorial(n-k))
+
+def spaceitout(text):
+    print("*~*~*~*~*~*~*~*~*~*~*~*~*~*")
+    print(text)
+    print("*~*~*~*~*~*~*~*~*~*~*~*~*~*")
+
+def minispaceitout(text):
+    print('')
+    print(text)
+    print('')
+
+spaceitout('Problem 1')
+minispaceitout('A die is painted so that three sides are red, two sides are blue, and one side is green.')
+print('A. Suppose that we roll the die once.')
+print('Let R, B, and G be the events that we roll red, blue, and green respectively.')
+print('Compute P(R), P(B), and P(G).')
+print('')
+sampleSpace1A = 6
+numR, numB, numG = 3, 2, 1
+probsDict1A = {'P(R)': Fraction(numR, sampleSpace1A), 'P(B)': Fraction(numB,sampleSpace1A), 'P(G)': Fraction(numG,sampleSpace1A)}
+print('Answer:')
+for j, k in probsDict1A.items():
+    print(j + ' is ' + str(k))
+
+minispaceitout('Suppose that we roll the die twice.')
+print('Compute the probability...')
+print('...of each element in the sample space.')
+print('')
+# The sample space is the set of all possible outcomes
+# And it doesn't look like anything depends on order above
+probsDict1B = {'P(RR)': probsDict1A['P(R)']*probsDict1A['P(R)'],
+               'P(BR)': probsDict1A['P(R)']*probsDict1A['P(B)'],
+               'P(RB)': probsDict1A['P(R)']*probsDict1A['P(B)'],
+               'P(RG)': probsDict1A['P(R)']*probsDict1A['P(G)'],
+               'P(GR)': probsDict1A['P(R)']*probsDict1A['P(G)'],
+               'P(BB)': probsDict1A['P(B)']*probsDict1A['P(B)'],
+               'P(BG)': probsDict1A['P(B)']*probsDict1A['P(G)'],
+               'P(GB)': probsDict1A['P(B)']*probsDict1A['P(G)'],
+               'P(GG)': probsDict1A['P(G)']*probsDict1A['P(G)']}
+print('Answer:')
+for j, k in probsDict1B.items():
+    print(j + ' is ' + str(k))
+
+minispaceitout('...that at least one roll is red.')
+answer1b2 = probsDict1B['P(RR)'] + probsDict1B['P(RB)'] + probsDict1B['P(RG)'] + probsDict1B['P(BR)'] + probsDict1B['P(GR)']
+print('Answer:')
+print(str(answer1b2))
+
+minispaceitout('...that neither roll is blue.')
+answer1b3 = probsDict1B['P(RR)']+probsDict1B['P(RG)']+probsDict1B['P(GR)']+probsDict1B['P(GG)']
+print('Answer:')
+print(str(answer1b3))
+
+minispaceitout('...that the two rolls have different colors.')
+answer1b4 = probsDict1B['P(RG)']+probsDict1B['P(RB)']+probsDict1B['P(GR)']+probsDict1B['P(GB)']+probsDict1B['P(BR)']+probsDict1B['P(BG)']
+print('Answer:')
+print(str(answer1b4))
+
+minispaceitout('...that either both rolls are red or both rolls are blue.')
+# This is the union of RR and BB
+# But we can get away with not using the inclusion-exclusion principle
+# because they don't overlap
+answer1b5 = probsDict1B['P(RR)']+probsDict1B['P(BB)']
+print('Answer:')
+print(str(answer1b5))
+
+minispaceitout('...that either both rolls are red or exactly one roll is blue.')
+E1 = probsDict1B['P(RR)']+probsDict1B['P(RB)']+probsDict1B['P(BR)']+probsDict1B['P(GR)']+probsDict1B['P(RG)'] # at least one red
+E2 = probsDict1B['P(RB)']+probsDict1B['P(GB)']+probsDict1B['P(BR)']+probsDict1B['P(BG)'] # excatly one blue
+E1intersectionE2 = probsDict1B['P(RB)']+probsDict1B['P(BR)']
+answer1b6 = E1 + E2 - E1intersectionE2
+print('Answer:')
+print(str(answer1b6))
+
+minispaceitout('...that either at least one roll is red or exactly one roll is blue.')
+# ooh but now we need to do the inclusion-exclusion
+# so inclusion-exclusion is
+# P(A) + P(B) - P(A intersection B)
+# also trickily I've been using the combination numbers up till now, not the permutations
+# so I gotta do it like this
+Patleastonerollred = probsDict1B['P(RR)']+probsDict1B['P(RB)']+probsDict1B['P(RG)']
+# which is equal to P(R) in 1A, btw
+Pexactlyonerollblue = probsDict1B['P(RB)']+probsDict1B['P(BG)']
+# intuitively, the next thing is
+Peitherredorblue1 = probsDict1B['P(RB)']/2
+answer1b7 = Patleastonerollred + Pexactlyonerollblue - Peitherredorblue1
+print('Answer:')
+print(str(answer1b7))
+
+minispaceitout('...that at least one roll is red or at least one roll is blue.')
+Patleastonerollblue = probsDict1B['P(RB)']+probsDict1B['P(BB)']+probsDict1B['P(BG)']
+answer1b8 = Patleastonerollred+Patleastonerollblue-Peitherredorblue1
+print('Answer:')
+print(str(answer1b8))
+
+spaceitout('Problem 2')
+minispaceitout('Suppose that A and B are events satisfying')
+print('P(A) = 1/2')
+minispaceitout('P(B) = 3/10')
+print('P(A intersection B) = 1/5')
+minispaceitout('Compute each of the following:')
+
+print('A)  P(A complement)')
+print('')
+PofA = Fraction(1,2)
+PofB = Fraction(3,10)
+PAintB = Fraction(1,5)
+answer2a = 1 - PofA
+print('Answer:')
+print(answer2a)
+
+minispaceitout('B)  P(B complement)')
+answer2b = 1 - PofB
+print('Answer:')
+print(answer2b)
+
+minispaceitout('C) P(A U B)')
+answer2c = PofA + PofB - PAintB
+print('Answer:')
+print(answer2c)
+
+minispaceitout('D) P(A intersection B-complement)')
+answer2d = PofA - PAintB
+print('Answer:')
+print(answer2d)
+
+minispaceitout('E) P(A-complement U B-complement)')
+answer2f = 1 - answer2c
+answer2e = answer2a + answer2b - answer2f
+print('Answer:')
+print(answer2e)
+    
+minispaceitout('F) P(A-complement intersection B-complement)')
+answer2f = 1 - answer2c
+print('Answer:')
+print(answer2f)
+
+spaceitout('Problem 3')
+minispaceitout('Select 2 cards from a standard 52-care deck.  Compute the probability that the second card is a heart given that the first card is red.')
+probHeart = Fraction(13,52)
+probDiamond = Fraction(13,52)
+P_E1_3 = probHeart * probDiamond # the probability that you draw a diamond and then a heart
+P_E2_3 = (probHeart - Fraction(1,52)) * probHeart # the probability that you draw a heart and then another heart
+answer3 = P_E1_3 + P_E2_3
+print('Answer:')
+print(answer3)
+
+spaceitout('Problem 4')
+minispaceitout('Roll a die twice. Compute the probability that the sum of the faces is greater than or equal to 7 given that...')
+print('A) The first roll is a 4.')
+# it'll need to be 3, 4, 5, or 6
+answer4a = Fraction(4,6)
+print('Answer:')
+print(answer4a)
+print('B) The first roll is greater than or equal to 3.')
+# first roll 3 - second roll can be 4, 5, or 6 - 1/2 probability
+# first roll 4 - second roll can be 3, 4, 5, or 6 - 2/3 probability
+# first roll 5 - second roll can be 2, 3, 4, 5, or 6 - 5/6 probability
+# first roll 6 - second roll can be anything - 1 probability
+answer4b = Fraction(1,6) * (Fraction(3,6) + Fraction(4,6) + Fraction(5,6) + Fraction(6,6))
+print('Answer:')
+print(answer4b)
+print('C) The first roll is 1.')
+print('Answer:')
+print(str(1))
+print('D) The first roll is less than or equal to 5.')
+# first roll 5 - second roll can be 2, 3, 4, 5, or 6 - 5/6
+# first roll 4 - second roll can be 3, 4, 5, or 6 - 4/6
+# first roll 3 - second roll can be 4, 5, or 6 - 3/6
+# first roll 2 - second roll can be 5 or 6 - 2/6
+# first roll 1 - second roll can only be 6 - 1/6 probability
+answer4d = Fraction(1,6) * (Fraction((5+4+3+2+1),6))
+print('Answer:')
+print(answer4d)

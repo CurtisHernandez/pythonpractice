@@ -1,0 +1,144 @@
+### 9/26/18 homework problems
+
+import math
+
+def addallconsecutive(num):
+    if num % 2 == 0:
+        return int((num * num)/2 + num/2)
+    else:
+        return int(num * (num + 1)/2)
+
+def permutationNumber(n,k):
+    return int(math.factorial(n) / math.factorial(n - k))
+    
+def combinationNumber(n,k):
+    return int(math.factorial(n) / (math.factorial(k) * math.factorial(n - k)))
+
+### Problem 1
+### Consider the experiment of drawing two cards from a standard 52 card deck.
+### How many two-card hands are possible?
+# I am going to assume that I need the combination number, which would be...
+# C(n,k) = n!/(k! * (n - k)!)
+twoCardHands = math.factorial(52)/(math.factorial(2) * math.factorial(52 - 2))
+print(str(int(twoCardHands)) + ' two-card hands are possible.')
+
+### Compute the probability of drawing two cards of the same color.
+# There are 3 events- RR, BR (or RB), BB
+# But each of those events are themselves partitioned into a gazillion things.
+# I literally visualized all of it in Excel
+# I will ask on Piazza if there's a more efficient way to do this
+numHearts = 13
+numRedCards = numHearts * 2
+numRRoutcomes = addallconsecutive(numRedCards-1)
+numSameColor = 2 * numRRoutcomes
+probSameColor = numSameColor / twoCardHands
+print('The probability of drawing two cards of the same color is ' + str(probSameColor)  + '.')
+#or...
+#let's think about it as a decision tree again, but just looking at reds
+probFirstCardRed = 26/52
+#then if you've already gotten past that barrier...
+probSecondCardRed = 25/51
+probBothCardsRed = probFirstCardRed * probSecondCardRed
+probSameColor2 = probBothCardsRed * 2
+print('The probability of drawing two cards of the same color is ' + str(probSameColor2)  + '.')
+
+###...of drawing two hearts.
+event = addallconsecutive(numHearts-1)
+probHearts = event / twoCardHands
+print('The probability of drawing two hearts is ' + str(probHearts)  + '.')
+#or...
+#so there's an equal probability of choosing any one card at first, and it's 1/52
+#then there's an equal probability of choosing any subsequent card, so it's 1/51
+#so the probability of any one outcome should be 1/(51*52).  which, when you
+#multiply it by 1236, happens to 0.5. Seems like that should mean something.
+#okay but anyway - so there's a 1/2652 probablity of any particular combination
+#so the first pass is
+probFirstCardHeart = 13/52
+#and the probability of the second card being a heart, once you get to a heart
+#on the first go-round, is
+probSecondCardHeart = 12/51
+#so you're left with
+probHearts2 = probFirstCardHeart * probSecondCardHeart
+print('The probability of drawing two hearts is ' + str(probHearts2)  + '.')
+#if this is unclear, think about a tree diagram
+
+###...of drawing two aces.
+# E = {CD, CH, CS,
+#      DH, DS,
+#      HS}
+numAces = 4
+numTwoAcesOutcomes = math.factorial(numAces - 1)
+probTwoAces = numTwoAcesOutcomes / twoCardHands
+print('The probability of drawing two aces is ' + str(probTwoAces) + '.')
+
+###...of drawing at least one ace.
+numOneAceOutcomes = 198 #????
+probOneAce = numOneAceOutcomes / twoCardHands
+print('The probability of drawing at least one ace is ' + str(probOneAce) + '.')
+#or...
+numAceFirstOne = 4/52 #this covers aces the second time around I think
+numAceSecondOne = 4/51 #???
+probOneAce2 = numAceFirstOne + numAceSecondOne
+print('The probability of drawing at least one ace is ' + str(probOneAce2) + '.')
+
+### Problem 2
+### Consider the experiment of rolling a six-sided die twice.
+totalOutcomes = 6*6
+### Compute the probability of rolling the same number twice.
+# 36 total outcomes.  There are just six outcomes that meet this criterion:
+# 11, 22, 33, 44, 55, and 66.
+# So that means:
+print('The probability of rolling the same thing twice in a row is ' + str(6/totalOutcomes) + '.')
+### ...that the sum of the two rolls is less than 9.
+# I'm not sure what the clever way to do this is, but this is the list of 9 or greater:
+# E = 2 * {36, 45, 46, 55, 56, 66}...so 12 potential outcomes
+# meaning that the number of outcomes less than 9 are 36 - 12
+print('The probability of rolling a sum less than 9 is ' + str(24/36) + '.')
+### ...that the product of the two rolls is 36.
+die1 = range(1,7)
+die2 = die1
+numOutcomesWhereTheyMultiplyTo36 = 0
+for z in die1:
+    for y in die2:
+        if z * y == 36:
+            numOutcomesWhereTheyMultiplyTo36 = numOutcomesWhereTheyMultiplyTo36 + 1
+# so that's 1, like I thought intuitively, but at least we checked
+print('The probability of rolling two die that sum to 36 is ' + str(1/36) + '.')
+### ...that the first roll minus the second roll == 2.
+E = {64, 53, 42, 31}
+numOutcomes = len(E)
+print('The probability that first die minus second die equals 2 is ' + str(numOutcomes/36) + '.')
+
+### Consider the problem of tossing a coin three times.  The sample space of this problem is
+omega = {'HHH', 'HHT', 'HTH', 'THH', 'HTT', 'THT', 'TTH', 'TTT'}
+### Describe each of the following events.
+E1 = {'HHH', 'HHT', 'HTH', 'THH'}
+E2 = {'HHH', 'TTT'} 
+E3 = {'HHT', 'HTH', 'THH'}
+E4 = {'HHT', 'HTH', 'THH', 'HTT', 'THT', 'TTH', 'TTT'}
+print('The probability of E1 is ' + str(len(E1)/len(omega)) + '.')
+print('The probability of E2 is ' + str(len(E2)/len(omega)) + '.')
+print('The probability of E3 is ' + str(len(E3)/len(omega)) + '.')
+print('The probability of E4 is ' + str(len(E4)/len(omega)) + '.')
+
+### A die is loaded such that the probability of each face turning up is proportional
+### to the number of dots on that face. For example, a six is three times as likely
+### as a two. Compute the probability of rolling an even number in one roll.
+# 1 = x + 2x + 3x + 4x + 5x + 6x = x * (1+2+3+4+5+6) = x * 21
+# so here are the probabilities:
+Pface1 = 1/21 
+Pface2 = Pface1 * 2
+Pface3 = Pface1 * 3
+Pface4 = Pface1 * 4
+Pface5 = Pface1 * 5
+Pface6 = Pface1 * 6
+print('The probability of rolling an even roll on this loaded die is ' + str(Pface2 + Pface4 + Pface6) + '.')
+
+### A bowl contains 16 chips, of which 6 are red, 7 are white, and 3 are blue.
+### Suppose that three chips are taken at random with replacement.
+### Compute the probability that each chip is red.
+print('The probability that each chip is red is ' + str((6/16) * (6/16) * (6/16)) + '.')
+### ...that none of the chips is red.
+print('The probability that none of the chips is red is ' + str((10/16) * (10/16) * (10/16)) + '.')
+### ...that at least one chip is red.
+print('The probability that at least one of the chips is red is ' + str(1 - ((10/16) * (10/16) * (10/16))) + '.')

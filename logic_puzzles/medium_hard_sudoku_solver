@@ -1,0 +1,151 @@
+## Sudoku
+
+import numpy
+
+def showpuzzle(puzzle):
+    for i in range(0,9):
+        thingtoprint = ''
+        for j in range(0,9):
+            if j == 3 or j == 6:
+                thingtoprint = thingtoprint + ' | ' + str(puzzle[i][j])
+            else:
+                thingtoprint = thingtoprint + ' ' + str(puzzle[i][j])
+        if i == 3 or i == 6:
+            print('----------------------')
+        print(thingtoprint)
+
+puzzle = numpy.zeros((9,9)).astype(int)
+# okay there's definitely a more user-friendly way to do this but FOR NOW        
+for i in range(0,9):
+    for j in range(0,9):
+        showpuzzle(puzzle)
+        puzzle[i][j] = input()
+    
+
+# later we will need to look at the three-by-three cells - tbts
+# so I will make this
+# I am sure there is a better way to do this but ughhhh
+tbtpuzzle = numpy.asarray([1,1,1,2,2,2,3,3,3,
+             1,1,1,2,2,2,3,3,3,
+             1,1,1,2,2,2,3,3,3,
+             4,4,4,5,5,5,6,6,6,
+             4,4,4,5,5,5,6,6,6,
+             4,4,4,5,5,5,6,6,6,
+             7,7,7,8,8,8,9,9,9,
+             7,7,7,8,8,8,9,9,9,
+             7,7,7,8,8,8,9,9,9]).reshape(9,9)
+
+def gettbt(tbtindex):
+    findindices = []
+    for n in range(9): # the rows of the tbt array
+        for o in range(9): # the columns of tbt array
+            if tbtpuzzle[n][o]==tbtindex:
+                findindices.append([n, o])
+    tbt = []
+    for p in findindices:
+        tbt.append(puzzle[p[0]][p[1]])
+    return tbt
+
+# get the easy ones - ones where there is literally just one value that works
+def gettheeasyones(puzzle):
+    while True:
+        changes = 0
+        for a in range(len(puzzle)): # for every row...
+            for b in range(len(puzzle)): #...and every column...
+                if puzzle[a][b] != 0:
+                    continue
+                else:
+                    rowtotest = list(puzzle[a])
+                    columntotest = list(puzzle[:,b])
+                    tbttotest = gettbt(tbtpuzzle[a,b])
+                    impossiblevalues = []
+                    impossiblevalues.extend(rowtotest)
+                    impossiblevalues.extend(columntotest)
+                    impossiblevalues.extend(tbttotest)
+                    #if len(set(impossiblevalues))==9:
+                    cellvalue = set(list(range(0,10)))-set(impossiblevalues) 
+                    if len(cellvalue)==1:
+                        puzzle[a][b] = list(cellvalue)[0]
+                        print('I put ' + str(list(cellvalue)[0]) + ' in row ' + str(a+1) + ', column ' + str(b+1))
+                        changes = changes+1
+        if changes > 0:
+            continue
+        elif changes==0:
+            break
+
+# now go row by row, column by column, tbt by tbt and see where they can have each value 1:9
+def gorowbyrow(puzzle):
+#    for z in [1,2]:
+    for c in range(1,10): # for each number, 1 through 9...
+        for d in range(len(puzzle)):
+            if c in puzzle[d]:
+                continue
+            else:
+                zeroindices = numpy.where(puzzle[d]==0)
+                zeroindices = list(zeroindices[0]) #gotta be a better way to do this
+                cantbethisindex = []
+                for e in zeroindices:
+                    isitinthecolumn = c in list(puzzle[:,e])
+                    isitinthetbt = c in gettbt(tbtpuzzle[d,e])
+                    if isitinthecolumn==True or isitinthetbt==True:
+                        cantbethisindex.append(0) # 0 = it can't go at that index
+                    else:
+                        cantbethisindex.append(1) # 1 = it can go at this index
+                if sum(cantbethisindex)==1:
+                    puzzle[d][zeroindices[cantbethisindex.index(1)]] = c
+                    print('I put ' + str(c) + ' in row ' + str(d + 1) + ', column' + str(zeroindices[cantbethisindex.index(1)]+1))
+#        puzzle = numpy.transpose(puzzle)
+
+def pseudotrues(puzzle):
+    for f in range(len(puzzle)):
+        posvals = [] # possible values
+        posvalindices = [] # where they're at
+        for g in range(len(puzzle)):
+            if puzzle[f][g]==0:
+                rowtotest = list(puzzle[f])
+                columntotest = list(puzzle[:,g])
+                tbttotest = gettbt(tbtpuzzle[f,g])
+                impossiblevalues = []
+                impossiblevalues.extend(rowtotest)
+                impossiblevalues.extend(columntotest)
+                impossiblevalues.extend(tbttotest)
+                possiblevalues = set(list(range(0,10))) - set(impossiblevalues)
+                posvals.append(tuple(possiblevalues))
+                posvalindices.append(g)
+        if any(posvals.count(x) > 1 for x in posvals):
+            countvals = []
+            for h in posvals:
+                countvals.append(posvals.count(h)-1) #this makes it z 0 if there's just one, and the numpy.extract() method will get nonzero things later
+            countvals = set(numpy.extract(countvals,posvals)) # this is just the pseudotrue cells - like, if it's [2,5],[2,5],[2,3,5], it'll pull out [2,5]
+        if len(countvals)!=0:
+            for i in countvals:
+                for j in posvals:
+                    if len(set(j)-set(i))==1:
+                        puzzle[f][g] = (list(set(j)-set(i))[0])
+                        break
+                break
+        break
+                
+        
+
+# NOW SOLVE
+while True:
+    howmanytogo = 81 - numpy.count_nonzero(puzzle)
+    howmanytogonow = 1
+    while True:
+        if howmanytogo == howmanytogonow:
+            break
+        else:
+            gettheeasyones(puzzle)
+            gorowbyrow(puzzle)
+            howmanytogo = howmanytogonow
+            howmanytogonow = 81 - numpy.count_nonzero(puzzle)
+            continue
+
+    if 0 not in puzzle:
+        print('PUZZLE SOLVED!!!! Hooray!!')
+        showpuzzle(puzzle)
+        break
+    else:
+        print('Sorry, boss, I tried')
+        break

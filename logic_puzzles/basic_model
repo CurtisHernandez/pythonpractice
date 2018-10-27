@@ -1,0 +1,77 @@
+#### SOLVING A LOGIC PUZZLE
+# this one relies on randomly iterating stuff until it meets all the criteria
+# it doesn't have an heuristics about "if X > Y and Y > Z then X > Z" or anything
+# it's all random
+# also there's some junk in here
+      
+import random
+#import pandas       
+#logicpuzzle = pandas.DataFrame()
+att2 = ['D','F','H','J']
+att3 = ['B','I','P','V']
+
+#logicpuzzle["days"] = dayslist
+#logicpuzzle["reporters"] = reporterslist
+#logicpuzzle["stories"] = storieslist
+
+
+# I need this to make sure I can shuffle around something I know for sure
+# make sure random is imported
+def pseudoshuffle(theList,theObjects,theIndices):
+    for a in theObjects:
+        theList.remove(a)
+    random.shuffle(theList)
+    for b, c in enumerate(theObjects):
+        theList.insert(theIndices[b],theObjects[b])
+    return theList
+
+ans = 0
+
+while ans != 4:
+    random.shuffle(att2)
+    random.shuffle(att3)
+    if att3.index('I')==att2.index('D') and 3==att2.index('J'):
+        rule1 = True
+    elif att3.index('I')==att2.index('J') and 3==att2.index('D'):
+        rule1 = True
+    else:
+        rule1 = False    
+    rule2 = att2.index('H')+2==att3.index('P')
+    if att3.index('I')==att2.index('J') and att3.index('I')!=1:
+        rule3 = True
+    elif att3.index('I')!=att2.index('J') and att3.index('I')==1:
+        rule3 = True
+    else:
+        rule3 = False
+    rule4 = len(list(set([att2.index('F'),3,att3.index('B'),2])))==len([att2.index('F'),3,att3.index('B'),2])
+    ans = rule1+rule2+rule3+rule4
+    
+    
+    
+    
+    
+    
+    
+    
+    # this is also a 3d matrix, I just realized
+import numpy
+blank = numpy.zeros((4,4,4))
+# shit this is hard to contemplate
+# so there will just be 4 1s total in "blank" eventually
+# I could scramble one for each slice
+# then if i could figure out which attribute is which i/j/k...
+# this is just so different than the index-based thing I've been doing
+# I guess it doesn't have to be a 3d matrix, it could just be a 2d 1 with 1/2/3/4 and 0s
+    
+
+# first get the ones you know for sure
+print('Are there any relationships that you know something POSITIVE about for sure? Enter Y or N.')
+answer = input()
+while answer=='Y':
+    print('What is one of the labels?')
+    thing1 = input()
+    print('What is the other one?')
+    thing2 = input()
+    # okay then
+    print('Any more? Enter Y or N.')
+    answer = input()

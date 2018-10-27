@@ -1,0 +1,41 @@
+# https://www.practicepython.org/exercise/2014/03/26/08-rock-paper-scissors.html
+
+# Make a two-player Rock-Paper-Scissors game. (Hint: Ask for player plays
+# (using input), compare them, print out a message of congratulations to the
+# winner, and ask if the players want to start a new game)
+
+# Remember the rules:
+
+# Rock beats scissors
+# Scissors beats paper
+# Paper beats rock
+
+def checkplay(text):
+    play = text.lower()
+    while play!="rock" and play!="paper" and play!="scissors":
+        print("\nSorry, you wrote something other than rock, paper, or scissors.  Try again!\n")
+        play = input().lower()
+    else:
+        return play
+
+def rps(playerone,playertwo):
+    rpsdict = {"rock": "scissors", "scissors": "paper", "paper": "rock"} # which thing beats which
+    if rpsdict[playerone]==playertwo:
+        print("\nPlayer one wins!\n")
+    elif rpsdict[playertwo]==playerone:
+        print("\nPlayer two wins!\n")
+    elif playerone==playertwo:
+        print("\nIt's a tie!\n")
+
+print("Hello!  I am a robot that helps you play rock-paper-scissors.\n")
+while True:
+    print("What does player one play - rock, paper, or scissors?")
+    playerone = checkplay(input())
+    print("\nAnd what does player two play?")
+    playertwo = checkplay(input())
+    rps(playerone,playertwo)
+    print("Type the 'c' key to play again, and hit the 'x' key to exit.")
+    if input()=="c":
+        continue
+    else:
+        break

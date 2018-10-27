@@ -1,0 +1,120 @@
+# now we are learning about dictionaries
+# which are kind of like structures in matlab
+# and kind of like lists in python in some ways, except they are not ordered and lists are
+# so like whereas in a list you would find an element based its index, because it's in an order,
+# in a dictionary you would find it based on its key
+# they happen with brackets
+
+myDog = {'size': 'large', 'color': 'black', 'disposition': 'barky'}
+myDog['size'] # prints 'large' because that's the value attached to the key; the key is 'size'
+
+# a fancier example
+birthdays = {'Alice': 'Apr 1', 'Bob': 'Dec 12', 'Carol': 'Mar 4'}
+while True:
+    print('Enter a name: (blank to quit)')
+    name = input()
+    if name == '':
+        break
+    if name in birthdays:
+        print(birthdays[name] + ' is the birthday of ' + name)
+    else:
+        print('I do not have birthday information for ' + name)
+        print('What is their birthday?')
+        bday = input()
+        birthdays[name] = bday
+        print('Birthday database updated.')
+        
+# hey look you can use for loops for dictionaries too
+# here's what you do if you just want to see the values
+for v in birthdays.values():
+    print(v)
+
+# here's what you do if you want to see the keys
+for k in birthdays.keys():
+    print(k)
+
+# here's what you do if you want to see both
+for i in birthdays.items():
+    print(i)
+    
+# suppose you wanted to turn one of these things into a list, meaning ordered, appendable, etc
+birthdayPeeps = list(birthdays.keys())
+
+# also you can do that multiple assignment thing IN A FOR LOOP which is pretty neat
+for meep, morp in birthdays.items(): # keys will come first, values will come second
+    print('The key is ' + meep)
+    print('The value is ' + morp)
+    
+# what if you want to know if your dictionary contains a key or value?
+'Alice' in birthdays.keys()
+'Alice' not in birthdays.keys()
+'Alice' in birthdays # shortcut
+'Dec 12' in birthdays # only works for keys
+
+# what if you don't know if a key exists?
+picnicItems = {'entrees': 2, 'desserts': 4}
+print('I am bringing ' + str(picnicItems.get('entrees', 0)) + ' entrees to the picnic.')
+print('I am bringing ' + str(picnicItems.get('beverages', 0)) + ' beverages to the picnic.')
+# the 0 is the value to put if there is no value associated with the proposed key
+# so you could also do this
+weddingCouples = {'Rachel': 'Abby', 'Kayla': 'Sergio', 'John': 'Kim'}
+rsvps = ['Rachel', 'Kayla', 'John', 'Cameron']
+for zorp in rsvps:
+    print(zorp + ' is bringing ' + str(weddingCouples.get(zorp, 'a plus one')))
+
+# how might you add a value into your dictionary?
+if 'Victoria' not in weddingCouples:
+    weddingCouples['Victoria'] = 'Ben'
+    
+rsvps.append('Victoria')
+# now run the zorp loop again
+
+# a quicker way to do this than an if not in loops is setdefault()
+weddingCouples.setdefault('Victoria','Ben') # won't do anything because Victoria is in there
+weddingCouples.setdefault('Sarah','Nasir') # adds Sarah as the key and Nasir as the value
+
+rsvps.append('Sarah')
+# now run zorp and see how Victoria only happens once but now Sarah happens
+
+# what is an application of this?
+# counting the number of times a character pops up in a string!
+
+message = 'How much wood could a woodchuck chuck if a woodchuck could chuck wood?'
+count = {} # an empty dictionary
+
+for character in message:
+    count.setdefault(character, 0) # if the character in the string doesn't exist, put it in there, saying that it has happened 0 times
+    count[character] = count[character] + 1 # update the count in the dictionary  
+# now you know how many of each letter are in this message
+count['c'] # you could ask how many c's are in the message
+
+# by using DICTIONARIES!
+# so you have keys that correspond to each section of a tic-tac-toe board
+tictactoe = {'topleft': ' ', 'topmid': ' ', 'topright': ' ',
+             'midleft': ' ', 'midmid': ' ', 'midright': ' ',
+             'botleft': ' ', 'botmid': ' ', 'botright': ' '}
+# we have initialized a blank board
+# let's make a function that prints it
+def printBoard(board):
+    print(tictactoe['topleft'] + '|' + tictactoe['topmid'] + '|' + tictactoe['topright'])
+    print('-+-+-')
+    print(tictactoe['midleft'] + '|' + tictactoe['midmid']  + '|' + tictactoe['midright'])
+    print('-+-+-')
+    print(tictactoe['botleft'] + '|' + tictactoe['botmid']  + '|' + tictactoe['botright'])
+    
+printBoard(tictactoe)
+
+# but what if you chaaaaanged it
+tictactoe['topleft'] = 'O'
+printBoard(tictactoe)
+
+turn = 'X'
+for i in range(9):
+    printBoard(tictactoe)
+    print('Turn for ' + turn + '. Move on which space?')
+    move = input()
+    tictactoe[move] = turn
+    if turn == 'X':
+        turn = 'O'
+    else:
+        turn = 'X'

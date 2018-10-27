@@ -1,0 +1,207 @@
+from fractions import Fraction
+import numpy as np
+
+def problem(text):
+    print("~*~*~*~*~*~*~*~*~")
+    print(text)
+    print("~*~*~*~*~*~*~*~*~")
+    
+def subproblem(text):
+    print("- - - - -")
+    print(text)
+    print("- - - - -")
+
+def expectedValue(vals,probs):
+    if len(vals) != len(probs):
+        print("You don't have enough values for each probability or vice versa.")
+        return 99999
+    else:
+        expectedValue = 0
+        for i in range(len(vals)):
+            expectedValue += vals[i] * probs[i]
+        return expectedValue
+    
+def getprobs(rangeX,X,probSampleSpace):
+    probX = []
+    for i in rangeX:
+        # get the indices in X for each of the options    
+        Xindices = list(np.where(np.array(X) == i)[0])
+        # find the probabilities for each of those indices
+        prob = 0
+        for j in Xindices:
+            prob += probSampleSpace[j]
+        probX.append(prob)
+    return probX
+
+#########################
+
+# Problem 1
+problem("Consider the experiment of flipping a biased coin, which flips heads with probability 3/5, four times. Find the expected value of each of the following random variables.")
+sampleSpace = ['HHHH', 'HHHT', 'HHTH', 'HTHH', 'THHH', 'HHTT', 'HTHT', 'HTTH',
+               'THHT', 'THTH', 'TTHH', 'HTTT', 'THTT', 'TTHT', 'TTTH', 'TTTT']
+X, Y, Z, probSampleSpace = [], [], [], []
+for i in sampleSpace:
+    numH = i.count("H")
+    numT = 4 - numH
+    prob = Fraction(3,5)**numH * Fraction(2,5)**numT
+    X.append(numH) # X will have the number of heads in each universe
+    Y.append(numH - numT) # Y will have the number of heads minus number of tails in each universe
+    Z.append(abs(numH - numT)) # Z will have the absolute value of Y in each universe
+    probSampleSpace.append(prob)
+
+rangeX, rangeY, rangeZ = list(set(X)), list(set(Y)), list(set(Z))
+rangeX.sort()
+rangeY.sort()
+rangeZ.sort()
+
+probX = getprobs(rangeX,X,probSampleSpace)
+probY = getprobs(rangeY,Y,probSampleSpace)
+probZ = getprobs(rangeZ,Z,probSampleSpace)    
+
+subproblem("A) X is the number of heads.")
+print("The potential values of X (i.e., the range) are:")
+for i in rangeX:
+    print(i)
+print("The probabilities of each of those values are, respectively:")
+for i in probX:
+    print(i)
+print("Therefore, the expected value of X is " + str(expectedValue(rangeX,probX)))
+
+subproblem("B) Y is the number of heads minus the number of tails.")
+print("The range of Y is:")
+for i in rangeY:
+    print(i)
+print("The probabilities of each of those values are, respectively:")
+for i in probY:
+    print(i)
+print("Therefore, the expected value of X is " + str(expectedValue(rangeY,probY)))
+
+subproblem("C) Z is the absolute value of Y.")
+print("The range of Z is:")
+for i in rangeZ:
+    print(i)
+print("The probabilities of each of those values are, respectively:")
+for i in probZ:
+    print(i)
+print("Therefore, the expected value of X is " + str(expectedValue(rangeZ,probZ)))
+
+#########################
+
+# Problem 2
+problem("Brian has an urn containing seven red, three green, and two amber balls. You agree to choose one ball from the urn. Brian will pay you $2 if you choose a green ball. However, you must pay Brian $1 if you choose a red ball. No money is exchanged if you choose an amber ball. Let X be your winnings in the game. Compute E(X).")
+sampleSpaceRaw, sampleSpace = ['R', 'R', 'R', 'R', 'R', 'R', 'R', 'G', 'G', 'G', 'A', 'A'], []
+valuedict = {"R": -1, "G": 2, "A": 0}
+for i in sampleSpaceRaw:
+    sampleSpace.append(valuedict[i])
+print(sampleSpace)
+rangeX = list(set(sampleSpace))
+probX = []
+for i in rangeX:
+    probX.append(Fraction(sampleSpace.count(i),len(sampleSpace)))
+print("The range of X is:")
+for i in rangeX:
+    print(i)
+print("The probability of each of those outcomes is:")
+for i in probX:
+    print(i)
+print("Therefore, the expected value of X is " + str(expectedValue(rangeX,probX)))
+
+#########################
+
+# Problem 3
+problem("Choose two balls with replacement from an urn containing six red and four green balls.  You win $2 each time you choose a green ball and you lose $1.50 each time you choose a red ball.  Let X be your winnings.")
+valuedict = {"R": Fraction(-3,2), "G": 2}
+probdict = {"R": Fraction(6,10), "G": Fraction(4,10)}
+rangeXraw = ['RR', 'RG', 'GR', 'GG']
+rangeX, probX = [], []
+for i in rangeXraw:
+    firstball = i[0]
+    secondball = i[1]
+    rangeX.append(valuedict[firstball]+valuedict[secondball])
+    probX.append(probdict[firstball]*probdict[secondball])
+subproblem("A) Compute E(X).")
+print("The range of X is:")
+for i in rangeX:
+    print(i)
+print("The probability of each of those outcomes is:")
+for i in probX:
+    print(i)
+print("Therefore, the expected value of X is " + str(expectedValue(rangeX,probX)))
+subproblem("B) Assuming you still win $2 each time you choose a green ball, how could the game be adjusted to ensure that E(X) = 0?")
+print("I mean, the easy way to do this is to make it so you lose $2 every time you choose a red ball and there are the same number of red and green.")
+print("Alternatively, you can try to simply fuss with the ratio of red to green balls, which is what I did.")
+print("If you let r be the number of red and g be the number of green balls, you can set up the expected value equation where the probability of drawing a red and then a geen is (r/r+g)*(g/r+g), etc.")
+print("Then if you set it equal to zero, you get something that eventually reduces to 0 = (3r - 4g)(r + g).")
+print("You can't have negative balls (hah), but you can rearrange the first part of the factored equation so that g = 3/4 * r.")
+print("That means that as long as the ratio of g : r is 3 : 4, expected value is 0.")
+print("Let there be 21 green balls and 28 red balls...")
+probdict = {"R": Fraction(28,28+21), "G": Fraction(21,28+21)}
+probX = []
+for i in rangeXraw:
+    firstball = i[0]
+    secondball = i[1]
+    probX.append(probdict[firstball]*probdict[secondball])
+print("The range of X is still:")
+for i in rangeX:
+    print(i)
+print("The new probabilities of X are:")
+for i in probX:
+    print(i)
+print("Therefore, the expected value of X is " + str(expectedValue(rangeX,probX)))
+
+#########################
+
+# Problem 4
+problem("Roll two six-sided die twice. Let X be the absolute value of the difference of the two values rolled.  Compute E(X).")
+X = []
+for i in range(1,7):
+    for j in range(1,7):
+        X.append(abs(i - j))
+rangeX = list(set(X))
+rangeX.sort()
+probX = getprobs(rangeX,X,[Fraction(1,len(X))]*len(X)) # the whole fraction mess is just because I needed it to be 1/36 36 times, because this is a uniform distribution
+print("The range of X is:")
+for i in rangeX:
+    print(i)
+print("The probability of each of these outcomes is:")
+for i in probX:
+    print(i)
+print("Therefore, the expected value of X is " + str(expectedValue(rangeX,probX)))
+
+#########################
+
+# Problem 5
+problem("A gambler bets on one of the numbers {1,2,3,4,5,6}. The gambler then rolls three six-sided dice. If the number bet on by the gambler appears i times for i = 1,2,3, then the gambler wins i dollars.  However, if the number bet on by the player does not appear on any of the dice, then teh gambler loses $1. What is the gambler's expected winnings?")
+idict = {"0": -1, "1": 1, "2": 2, "3": 3}
+sampleSpace = ['WWW', 'WWL', 'WLW', 'LWW', 'WLL', 'LWL', 'LLW', 'LLL'] # w = win, l = loss
+X, probSampleSpace = [], []
+winlossdict = {'W': Fraction(1,6), "L": Fraction(5,6)}
+for i in sampleSpace:
+    firstroll = i[0]
+    secondroll = i[1]
+    thirdroll = i[2]
+    probSampleSpace.append(winlossdict[firstroll] * winlossdict[secondroll] * winlossdict[thirdroll])
+    X.append(i.count("W"))
+rangeX = list(set(X))
+rangeX.sort()
+probX = getprobs(rangeX,X,probSampleSpace)
+vals = []
+for i in rangeX:
+    vals.append(idict[str(i)])
+print("The range of X is:")
+for i in rangeX:
+    print(i)
+print("...with values at:")
+for i in vals:
+    print(i)
+print("...and probabilities of:")
+for i in probX:
+    print(i)
+print("Therefore, the expected winnings are " + str(expectedValue(vals,probX)))
+
+#########################
+
+# Problem 6
+problem("Suppose you run an insurance agency. Each of your three clients has a 20% probability of getting into an accident durning the year. For each accident, you must pay $4K and you only pay for at most one accident per client per year. You pay a reinsurer a flat fee of $200. In exchange, the reinsurer promises to reimburse you $3K in the event that all three of your clients have accidents this year. How much should you charge each client so that your expected net profit is $500?")
+# so what I'm gonna do is set the expected value equation equal to $500
+print("Answer: $1025.34")

@@ -1,0 +1,78 @@
+# Methods are the thing where you have a value.something()
+# For instance, the index() method tells you where an object is in a list
+Rush.index('Neil') #evaluates to 2 because Neil is the 3rd guy in there
+
+# Or append()
+Rush.append('Aimee Man')
+
+# Or insert()
+Rush.insert(1, 'Rutsey') # puts "Rutsey" in the 1 index
+
+# Or remove() which is del backwards - you can remove the object without knowing its index
+Rush.remove('Rutsey')
+Rush.remove('Aimee Man')
+
+# Or sort()
+Rush.sort()
+Rush.sort(reverse=True)
+# bear in mind that sort() sorts by ASCII alphabet, so capital letters are not the same as lowercase
+
+# You can use this stuff to write a magic 8 ball program
+messages = ['It is certain',
+    'It is decidedly so',
+    'Yes definitely',
+    'Reply hazy try again',
+    'Ask again later',
+    'Concentrate and ask again',
+    'My reply is no',
+    'Outlook not so good',
+    'Very doubtful']
+
+print(messages[random.randint(0, len(messages) - 1)]) # it picks a random integer within 0 and the length of the messages list
+# and then selects the nth object in the messages list
+
+# If you want a list that you can't ever change in any way, make it a tuple by using () instead of []
+
+# Note that if you assign a new variable to a list value (which is just a list), if you change the new one, you ALSO CHANGE THE OLD ONE
+# unless you use copy()
+
+# Exercise
+spam = ['apples', 'bananas', 'tofu', 'cats']
+
+# Write a function that takes a list value as an argument and returns a
+# string with all the items separated by a comma and a space, with and
+# inserted before the last item. For example, passing the previous spam list
+# to the function would return 'apples, bananas, tofu, and cats'. But your
+# function should be able to work with any list value passed to it.
+
+def iDidThisAlreadyOnce(meep):
+    string = ''
+    for i in range(0,len(meep)-1):
+        string += meep[i] + ', '
+    string += 'and ' + meep[-1]
+    return string
+
+# Say you have a list of lists where each value in the inner lists is a
+# one-character string, like this:
+
+grid = [['.', '.', '.', '.', '.', '.'],
+        ['.', 'O', 'O', '.', '.', '.'],
+        ['O', 'O', 'O', 'O', '.', '.'],
+        ['O', 'O', 'O', 'O', 'O', '.'],
+        ['.', 'O', 'O', 'O', 'O', 'O'],
+        ['O', 'O', 'O', 'O', 'O', '.'],
+        ['O', 'O', 'O', 'O', '.', '.'],
+        ['.', 'O', 'O', '.', '.', '.'],
+        ['.', '.', '.', '.', '.', '.']]
+
+# You can think of grid[x][y] as being the character at the x- and
+# y-coordinates of a “picture” drawn with text characters. The (0, 0) origin
+# will be in the upper-left corner, the x-coordinates increase going right,
+# and the y-coordinates increase going down.
+
+# Copy the previous grid value, and write code that uses it to print the image.
+for i in range(0,len(grid[0])):
+    string = ''
+    for j in range(0,len(grid)):
+        string += grid[j][i]
+    print(string)

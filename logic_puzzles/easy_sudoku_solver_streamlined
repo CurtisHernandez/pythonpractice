@@ -1,0 +1,73 @@
+## Sudoku
+## just works on the easy ones
+
+import numpy
+import random
+
+def showpuzzle(puzzle):
+    for i in range(0,9):
+        thingtoprint = ''
+        for j in range(0,9):
+            if j == 3 or j == 6:
+                thingtoprint = thingtoprint + ' | ' + str(puzzle[i][j])
+            else:
+                thingtoprint = thingtoprint + ' ' + str(puzzle[i][j])
+        if i == 3 or i == 6:
+            print('----------------------')
+        print(thingtoprint)
+
+puzzle = numpy.zeros((9,9)).astype(int)
+# okay there's definitely a more user-friendly way to do this but FOR NOW        
+for i in range(0,9):
+    for j in range(0,9):
+        showpuzzle(puzzle)
+        puzzle[i][j] = input()
+
+# later we will need to look at the three-by-three cells - tbts
+# so I will make this
+# I am sure there is a better way to do this but ughhhh
+tbtpuzzle = numpy.asarray([1,1,1,2,2,2,3,3,3,
+             1,1,1,2,2,2,3,3,3,
+             1,1,1,2,2,2,3,3,3,
+             4,4,4,5,5,5,6,6,6,
+             4,4,4,5,5,5,6,6,6,
+             4,4,4,5,5,5,6,6,6,
+             7,7,7,8,8,8,9,9,9,
+             7,7,7,8,8,8,9,9,9,
+             7,7,7,8,8,8,9,9,9]).reshape(9,9)
+
+def gettbt(tbtindex):
+    findindices = []
+    for n in range(9): # the rows of the tbt array
+        for o in range(9): # the columns of tbt array
+            if tbtpuzzle[n][o]==tbtindex:
+                findindices.append([n, o])
+    tbt = []
+    for p in findindices:
+        tbt.append(puzzle[p[0]][p[1]])
+    return tbt
+
+while True:
+    changes = 0
+    for a in range(len(puzzle)): # for every row...
+        for b in range(len(puzzle)): #...and every column...
+            if puzzle[a][b] != 0:
+                continue
+            else:
+                rowtotest = list(puzzle[a])
+                columntotest = list(puzzle[:,b])
+                tbttotest = gettbt(tbtpuzzle[a,b])
+                impossiblevalues = []
+                impossiblevalues.extend(rowtotest)
+                impossiblevalues.extend(columntotest)
+                impossiblevalues.extend(tbttotest)
+                if len(set(impossiblevalues))==9:
+                    cellvalue = set(list(range(0,10)))-set(impossiblevalues)
+                    puzzle[a][b] = list(cellvalue)[0]
+                    changes = changes+1
+    if changes > 0:
+        continue
+    elif changes==0:
+        break
+
+showpuzzle(puzzle)

@@ -1,0 +1,24 @@
+# Just like in R, lists can contain data objects of a bunch of different types
+# You can also have lists of lists, and you can index in the index (indexception lol)
+# so like:
+
+babysFirstList = ['this', 'is', 'a', 'list']
+babysSecondList = [70, 71]
+babysFirstMetaList = [babysFirstList, babysSecondList]
+babysFirstMetaList[0][1]
+
+# There are some weird ways you can slice your lists that you don't see in other languages
+babysFirstList[:2] # if you leave out the beginning of a slice, it's 0
+babysFirstList[1:] # if you leave out the end of a slice, it's end
+
+# You can delete stuff from lists which is kind of nice
+del babysFirstList[1]
+babysFirstList
+
+# You can use "in" and "not in" to see if an object is in, or not in, a list
+'this' in babysFirstList #evaluates to True because it's in there
+'this' not in babysFirstList #evaluates to False because it's not not in there
+
+# Remember multiple assignment?
+Rush = ['Geddy', 'Alex', 'Neil']
+bassist, guitarist, drummer = Rush

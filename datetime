@@ -1,0 +1,30 @@
+# https://www.practicepython.org/exercise/2014/01/29/01-character-input.html
+
+# Create a program that asks the user to enter their name and their age. Print
+# out a message addressed to them that tells them the year that they will turn
+# 100 years old.
+
+# Extras:
+
+# Add on to the previous program by asking the user for another number and
+# printing out that many copies of the previous message. (Hint: order of
+# operations exists in Python)
+# Print out that many copies of the previous message on separate lines. (Hint:
+# the string "\n is the same as pressing the ENTER button)
+    
+import datetime
+    
+print("Hey homie what's your name?")
+name = input()
+print("How about your age?")
+age = int(input())
+
+now = datetime.datetime.now()
+
+message = ("Cool, that means that you're going to be 100 years old in the year " + str(now.year - age + 100) + ".")
+print(message)
+print("Hey: \nwhy don't you pick another number for me to repeat the previous message by so I can get extra credit?")
+repeatnum = int(input())
+
+for i in range(repeatnum):
+    print(message)

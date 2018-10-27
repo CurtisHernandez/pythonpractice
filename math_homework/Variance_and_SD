@@ -1,0 +1,58 @@
+import math as m
+from fractions import Fraction
+
+def problem(text):
+    print("==========================================\n")
+    print(text + "\n")
+    print("==========================================\n")
+    
+def expectedValue(rangeX,probX):
+    answer = 0
+    for i in range(len(rangeX)):
+        answer += rangeX[i] * probX[i]
+    return answer
+
+def variance(rangeX,probX):
+    EX = expectedValue(rangeX,probX)
+    sqdif = []
+    for i in rangeX:
+        sqdif.append((i - EX)**2)
+    return expectedValue(sqdif,probX)
+    
+problem("Problem 1. Choose a number from the list S = {−1, 0, 1}. Let X be the number chosen. Compute E(X), Var(X), and SD(X).)")
+p1_rangeX = [-1, 0, 1]
+p1_probX = [Fraction(1,3)] * 3
+p1_EX = expectedValue(p1_rangeX,p1_probX)
+print("E(X) = " + str(p1_EX) + ".\n")
+p1_rangeX_sqdif = [(-1 - p1_EX)**2, (0 - p1_EX)**2, (1 - p1_EX)**2]
+print("Because Var(X) = E((X - E(X))^2), that means that Var(X) in this case = " + str(expectedValue(p1_rangeX_sqdif,p1_probX)) + ".\n")
+print("And because the standard deviation of a random variable is the square root of the variance, SD(X) = " + str(m.sqrt(expectedValue(p1_rangeX_sqdif,p1_probX))) + ".\n")
+
+problem("Problem 2. Suppose that X is a random variable with E(X) = 100 and Var(X) = 15.")
+print("A) Compute E(X^2).\n")
+print("Since Var(X) = E(x^2) - E(x)^2, the answer is 15 - E(X)^2, or " + str(15+100**2) + ".\n")
+print("B) Compute E(3X + 10).\n")
+print("Since expected values are linearly additive, and this is the same as E(X + X + X + 10), this is equal to 3E(X) + E(10).")
+print("And since E(a) = a, that means it's 3E(X) + 10, or - since E(X) = 100 - 310.\n")
+print("C) Compute E(-X).\n")
+print("D) Compute Var(X).\n")
+print("Um...15.\n")
+print("E) Compute SD(X).\n")
+print("Square root of 15, or " + str(m.sqrt(15)) + ".\n")
+    
+problem("Problem 3. A die is loaded so that the probability of a number being rolled is proportional to the number on that face. The die is rolled with outcome X. Compute Var(X) and SD(X).")
+p3_rangeX = [1,2,3,4,5,6]
+print("The probabilities are weird here, but it boils down to the one face being rolled with 1/21 probability, and so on up.")
+p3_probX = [Fraction(1,21),Fraction(2,21),Fraction(3,21),Fraction(4,21),Fraction(5,21),Fraction(6,21)]
+print("The variance of X is the expected value of the squared difference of X and the expected value of X.")
+print("So Var(X) = " + str(variance(p3_rangeX,p3_probX)) + " and the standard deviation is " + str(m.sqrt(variance(p3_rangeX,p3_probX))) + ".\n")
+
+
+problem("Problem 4. Let X be a random variable with mu = E(X) and sigma squared = Var(X). The random variable X* = (X - mu)/sigma is called the standardized random variable associated with X. Show that E(X*) = 0 and Var(X*) = 1.")
+
+problem("Problem 5. Suppose that P(A1) = 1/5, P(A2) = 1/4, and P(A3) = 1/3. Let N be the number of events that occur.")
+print("A) Find a formula for N in terms of indicators.")
+print("B) Compute E(N).")
+print("C) Compute Var(N) if {A1, A2, A3} is pairwise disjoint.")
+print("D) Compute Var(N) if {A1, A2, A3} is independent.")
+print("E) Compute Var(N) if A1 ⊂ A2 ⊂ A3.")

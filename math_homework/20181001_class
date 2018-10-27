@@ -1,0 +1,76 @@
+import math
+
+def combinationNumber(n,k):
+    return math.factorial(n) / (math.factorial(k) * math.factorial(n - k))
+
+def permutationNumber(n,k):
+    return math.factorial(n) / math.factorial(n-k)
+
+def spaceitout():
+    print("*~*~*~*~*~*~*~*~*~*~*~*~*~*")
+
+print('REVIEW OF OLD STUFF')
+
+print('How likely are you to get a full house in poker? (JJJAA)')
+# all the possible hands are the combination number of 52 and 5:
+allHands = combinationNumber(52,5)
+# all the possible ways to get 3 jacks are the combination of 4 and 3:
+threeJacks = combinationNumber(4,3)
+# all the possible ways to get 2 aces are the combination of 4 and 2:
+twoAces = combinationNumber(4,2)
+# multiply the threeJacks combination number by the twoAces cn, just like
+# in a tree diagram
+allFullHouses = threeJacks * twoAces
+# and now the probability is:
+PfullHouse = allFullHouses/allHands
+print(str(PfullHouse))
+
+spaceitout()
+
+#### Say we roll an n-sided die twice.  Let A-sub-K be the event that the 
+#### MAXIMUM of the two numbers rolled is less than or equal to K.
+# Let's start with A-sub-1.
+# The probability of A-sub-1 ends up being (1/n)*(1/n), so 1/n-squared.
+# For A-sub-2, the possibility that the highest number in the rolls is
+# 2 is (2/n) * (2/n), which is 2-squared/n/squared.
+# To make a general rule, it looks like we have a general rule of:
+# k-squared/n-squared.
+# Now say we want to get the probability that the max of th two numbers is
+# EXACTLY equal to k.  We would just calculate the probability of above but
+# then also SUBTRACT out the possibility that the max is less than k, which
+# translates to A-sub-(k-1) (which encompasses all smaller ks)
+
+print('Suppose we have N people, who are arranged in a line.')
+print('What is the probability that person A and person B end up next to each other?')
+# So this is about PERMUTATIONS.  The number of ways to permute a set is n!
+# We will set n for 10 for now.
+
+n = 10
+sampleSpace = math.factorial(n)
+
+# Now how do we get A and B next to each other?
+# Let's think it out practically first.  If person A is at either of the ends,
+# person B has only one other position they can be in to satisfy the next-to-
+# A criterion.  That means that for one of the ends, the remaining options 
+# are (N-2), which can be arranged in (N-2)! ways.
+
+end1 = math.factorial(n-2)
+# both ends
+end2 = end1
+
+# So if we're partitioning the problem into "ends" and "not at the ends."
+# Above is the ends.  Now let's say person A is NOT at the end.
+# Now person B has TWO positions they can be in next to A.
+# If B is to the left of A, the other students can be arranged in (n-2)! ways.
+# If B is to the right of A, the other students can still be arranged in (n-2)! ways.
+# There are n-2 positions for person A to occupy.  So the total options for
+# the "not at the ends" event are
+notend = (n-2) * 2 * math.factorial(n-2)
+# (n-2)!, because those are the ways everyone else can be sitting
+# 2, because that happens twice, one for each side of A B can be on
+# and n-2, because those are all of the places A can be that aren't the end
+# This simplifies to 2/n (after a lot of doin').
+
+print(str((end1 + end2 + notend)/sampleSpace))
+
+spaceitout()

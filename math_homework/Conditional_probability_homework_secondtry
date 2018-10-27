@@ -1,0 +1,234 @@
+import math
+from fractions import Fraction
+
+def combinationNumber(n,k):
+    return int(math.factorial(n) / (math.factorial(k) * math.factorial(n - k)))
+
+def permutationNumber(n,k):
+    return int(math.factorial(n) / math.factorial(n-k))
+
+def spaceitout(text):
+    print("*~*~*~*~*~*~*~*~*~*~*~*~*~*")
+    print(text)
+    print("*~*~*~*~*~*~*~*~*~*~*~*~*~*")
+
+def minispaceitout(text):
+    print('')
+    print(text)
+    print('')
+
+spaceitout('Problem 1')
+minispaceitout('A die is painted so that three sides are red, two sides are blue, and one side is green.')
+print('A) Suppose that we roll the die once.')
+print('Let R, B, and G be the events that we roll red, blue, and green respectively.')
+print('Compute P(R), P(B), and P(G).')
+pR_1a = Fraction(3,6)
+pB_1a = Fraction(2,6)
+pG_1a = Fraction(1,6)
+print('Answer:')
+print(pR_1a)
+print(pB_1a)
+print(pG_1a)
+print('(...respectively)')
+
+minispaceitout('B) Suppose that we roll the die twice.')
+print('Compute the probability...')
+print('...of each element in the sample space.')
+omega1b = {'RR': pR_1a*pR_1a,'RB': pR_1a*pB_1a,'RG': pR_1a*pG_1a,
+           'BR': pB_1a*pR_1a,'BB': pB_1a*pB_1a, 'BG': pB_1a*pG_1a,
+           'GR': pG_1a*pR_1a,'GB': pG_1a*pB_1a, 'GG': pG_1a*pG_1a}
+print('Answer:')
+for j, k in omega1b.items():
+    print('The probability of ' + j + ' is ' + str(k))
+
+totalOmega1b = omega1b['RR']+omega1b['RB']+omega1b['RG']+omega1b['BR']+omega1b['BB']+omega1b['BG']+omega1b['GR']+omega1b['GB']+omega1b['GG']
+
+minispaceitout('...that at least one roll is red.')
+print('Answer:')
+answer1b2 = omega1b['RR']+omega1b['RB']+omega1b['RG']+omega1b['BR']+omega1b['GR']
+print(str(answer1b2))
+
+minispaceitout('...that neither roll is blue.')
+answer1b3 = omega1b['RR']+omega1b['RG']+omega1b['GR']+omega1b['GG']
+print('Answer:')
+print(str(answer1b3))
+
+minispaceitout('...that the two rolls have different colors.')
+# using the difference rule...
+answer1b4 = 1 - (omega1b['RR'] + omega1b['BB'] + omega1b['GG'])
+print('Answer:')
+print(str(answer1b4))
+
+minispaceitout('...that either both rolls are red or both rolls are blue.')
+E1_1b5 = ['RR']
+E2_1b5 = ['BB']
+p_E1_1b5 = omega1b[E1_1b5[0]]
+p_E2_1b5 = omega1b[E2_1b5[0]]
+answer1b5 = p_E1_1b5 + p_E2_1b5
+print('Answer:')
+print(str(answer1b5))
+
+minispaceitout('...that either both rolls are red or exactly one roll is blue.')
+E1_1b6 = ['RR']
+E2_1b6 = ['RB','BR','BG','GB']
+p_E1_1b6 = omega1b[E1_1b6[0]]
+p_E2_1b6 = 0
+for i in E2_1b6:
+    p_E2_1b6 += omega1b[i]
+answer1b6 = p_E1_1b6 + p_E2_1b6
+print('Answer:')
+print(str(answer1b6))
+
+minispaceitout('...that either at least one roll is red or exactly one roll is blue.')
+E1_1b7 = ['RR','RB','RG','BR','GR']
+p_E1_1b7 = 0
+for i in E1_1b7:
+    p_E1_1b7 += omega1b[i]
+p_E2_1b7 = omega1b['BB']
+answer1b7 = p_E1_1b7 + p_E2_1b7
+print('Answer:')
+print(str(answer1b7))
+
+minispaceitout('...that at least one roll is red or at least one roll is blue.')
+# will need to use the inclusion-exclusion rule, because they overlap!
+E1_1b8 = ['RR','RB','RG','BR','GR']
+p_E1_1b8 = 0
+for i in E1_1b8:
+    p_E1_1b8 += omega1b[i]
+E2_1b8 = ['RB','BR','BB','BG','GB']
+p_E2_1b8 = 0
+for i in E2_1b8:
+    p_E2_1b8 += omega1b[i]
+E1_intersection_E2 = ['RB','BR']
+p_E1_intersection_E2 = 0
+for i in E1_intersection_E2:
+    p_E1_intersection_E2 += omega1b[i]
+answer1b8 = p_E1_1b8 + p_E2_1b8 - p_E1_intersection_E2
+print('Answer:')
+print(str(answer1b8))
+# you can also use the difference rule!
+# the only scenario where you don't have at least one R or B is GG.
+# which would be 1 - P(GG), which gives the same answer.
+
+spaceitout('Problem 2')
+minispaceitout('Suppose that A and B are events satisfying')
+print('P(A) = 1/2')
+minispaceitout('P(B) = 3/10')
+print('P(A intersection B) = 1/5')
+minispaceitout('Compute each of the following:')
+
+P_A_2 = Fraction(1,2)
+P_B_2 = Fraction(3,10)
+P_A_intersection_B_2 = Fraction(1,5)
+
+print('A)  P(A complement)')
+answer2a = 1 - P_A_2
+print('Answer:')
+print(answer2a)
+
+minispaceitout('B)  P(B complement)')
+answer2b = 1 - P_B_2
+print('Answer:')
+print(answer2b)
+
+minispaceitout('C) P(A U B)')
+answer2c = P_A_2 + P_B_2 - P_A_intersection_B_2
+print('Answer:')
+print(answer2c)
+
+minispaceitout('D) P(A intersection B-complement)')
+answer2d = P_A_2 - P_A_intersection_B_2
+print('Answer:')
+print(answer2d)
+
+minispaceitout('E) P(A-complement U B-complement)')
+# everything that's not in A and everything that's not in B is everything
+# except the intersection of A and B
+answer2e = 1 - P_A_intersection_B_2
+print('Answer:')
+print(answer2e)
+    
+minispaceitout('F) P(A-complement intersection B-complement)')
+# or, everything that is not in A and also not in B
+answer2f = 1 - answer2c # everything but the union of A and B
+print('Answer:')
+print(answer2f)
+
+spaceitout('Problem 3')
+minispaceitout('Select 2 cards from a standard 52-care deck.  Compute the probability that the second card is a heart given that the first card is red.')
+# The conditional probability of A given B is the probability of the
+# intersection of A and B divided by the probability of B.
+pss3 = Fraction(12,52) # probability of drawing the same suit
+pds3 = Fraction(13,52) # probability of drawing a different suit
+omega3 = {'CC': pds3 * pss3, 'CD': pds3 * pds3, 'CH': pds3 * pds3, 'CS': pds3 * pds3,
+          'DC': pds3 * pds3, 'DD': pds3 * pss3, 'DH': pds3 * pds3, 'DS': pds3 * pds3,
+          'HC': pds3 * pds3, 'HD': pds3 * pds3, 'HH': pds3 * pss3, 'HS': pds3 * pds3,
+          'SC': pds3 * pds3, 'SD': pds3 * pds3, 'SH': pds3 * pds3, 'SS': pds3 * pss3}
+B3 = ['DC','DD','DH','DS','HC','HD','HH','HS'] # the first card is a red
+A3 = ['CH','DH','HH','SH'] # the second card is a heart
+A_intersection_B3 = list(set(A3) - (set(A3) - set(B3)))
+pA_intersection_B3 = 0
+for i in A_intersection_B3:
+    pA_intersection_B3 += omega3[i]
+pB3 = 0
+for i in B3:
+    pB3 += omega3[i]
+answer3 = pA_intersection_B3 / pB3
+print('Answer:')
+print(answer3)
+
+spaceitout('Problem 4')
+minispaceitout('Roll a die twice. Compute the probability that the sum of the faces is greater than or equal to 7, given that:')
+print('A) The first roll is a 4.')
+# P(exceeds 6 | first roll 4) = P(exceeds 6 intersection first roll 4)/P(first roll 4)
+E1_4 = {(1,6),(2,5),(2,6),(3,4),(3,5),(3,6),(4,3),(4,4),(4,5),(4,6),(5,2),
+        (5,3),(5,4),(5,5),(5,6),(6,1),(6,2),(6,3),(6,4),(6,5),(6,6)} #exceeds 6
+E2_4 = {(4,1),(4,2),(4,3),(4,4),(4,5),(4,6)}
+E1_intersection_E2_4 = E1_4 - (E1_4 - E2_4)
+p_E2_4 = len(E2_4) * Fraction(1,6) * Fraction(1,6)
+p_E1_intersection_E2_4 = len(E1_intersection_E2_4) * Fraction(1,6) * Fraction(1,6)
+answer4a = p_E1_intersection_E2_4 / p_E2_4
+print('Answer:')
+print(answer4a)
+
+minispaceitout('B) The first roll is greater than or equal to 3.')
+E2_4b = {(3,1),(3,2),(3,3),(3,4),(3,5),(3,6),
+         (4,1),(4,2),(4,3),(4,4),(4,5),(4,6),
+         (5,1),(5,2),(5,3),(5,4),(5,5),(5,6),
+         (6,1),(6,2),(6,3),(6,4),(6,5),(6,6)}
+E1_intersection_E2_4b = E1_4 - (E1_4 - E2_4b)
+p_E1_intersection_E2_4b = len(E1_intersection_E2_4b) * Fraction(1,36)
+p_E2_4b = len(E2_4b) * Fraction(1,36)
+answer4b = p_E1_intersection_E2_4b / p_E2_4b
+print('Answer:')
+print(answer4b)
+
+minispaceitout('C) The first roll is 1.')
+print('Answer:')
+E2_4c = {(1,1),(1,2),(1,3),(1,4),(1,5),(1,6)}
+E1_intersection_E2_4c = E1_4 - (E1_4 - E2_4c)
+p_E1_intersection_E2_4c = len(E1_intersection_E2_4c) * Fraction(1,36)
+p_E2_4c = len(E2_4c) * Fraction(1,36)
+answer4c = p_E1_intersection_E2_4c / p_E2_4c
+print(answer4c)
+
+minispaceitout('D) The first roll is less than or equal to 5.')
+E2_4d = {(1,1),(1,2),(1,3),(1,4),(1,5),(1,6),
+         (2,1),(2,2),(2,3),(2,4),(2,5),(2,6),
+         (3,1),(3,2),(3,3),(3,4),(3,5),(3,6),
+         (4,1),(4,2),(4,3),(4,4),(4,5),(4,6),
+         (5,1),(5,2),(5,3),(5,4),(5,5),(5,6)}
+E1_intersection_E2_4d = E1_4 - (E1_4 - E2_4d)
+p_E1_intersection_E2_4d = len(E1_intersection_E2_4d) * Fraction(1,36)
+p_E2_4d = len(E2_4d) * Fraction(1,36)
+answer4d = p_E1_intersection_E2_4d / p_E2_4d
+print('Answer:')
+print(answer4d)
+
+spaceitout('Problem 5')
+minispaceitout('An urn contains v violet balls and w white balls.  Suppose that a ball is chosen at random.')
+minispaceitout('If the selected ball is violet, five more violet balls are added to the urn.')
+minispaceitout('If the selected ball is white, five more white balls are added to the urn.')
+minispaceitout('Suppose the original ball is returned to the urn.')
+minispaceitout('If a ball is once again selected, what is the probability that it is violet? White?')
+print("I HAVE NO IDEA HOW TO DO THIS")

@@ -1,0 +1,78 @@
+# BeautifulSoup tutorial
+# https://www.dataquest.io/blog/web-scraping-tutorial-python/
+
+# to download a webpage you need the requests package
+import requests
+
+# and you use the .get() method
+page = requests.get("http://dataquestio.github.io/web-scraping-pages/simple.html")
+page
+
+# check to see if it was downloaded correctly by seeing if the line below outputs 200
+page.status_code
+
+# so what's the HTML code of this sample website?
+page.content
+
+# now do the BeautifulSoup library
+from bs4 import BeautifulSoup
+soup = BeautifulSoup(page.content, 'html.parser')
+
+# take a look
+print(soup.prettify())
+# it's all formatted nice!
+
+# now we look through all the elements in the "top level" of the page
+list(soup.children)
+# this is a little confusing to me, but I guess it's the same thing
+# as the thing above it but turned into a list and parsing the <!DOCTYPE html>
+# line further
+
+# this is to see the type of each element in the children list
+[type(item) for item in list(soup.children)]
+# "As you can see, all of the items are BeautifulSoup objects. The first is
+# a Doctype object, which contains information about the type of the
+# document. The second is a NavigableString, which represents text found in
+# the HTML document. The final item is a Tag object, which contains other
+# nested tags. The most important object type, and the one we'll deal with
+# most often, is the Tag object."
+
+# so it wanted to look at the type of elements on the list so it could
+# find the parts of the beautiful soup object that are tags.
+html = list(soup.children)[2]
+# so this just shows us the stuff labeled title and body and paragraph, and 
+# the associated content.  I guess not the DocType stuff?
+
+# now it wants us to list html's children
+list(html.children)
+
+# if you want to explore through what all these lists are, just append [#] 
+# to the line above, where # is the index within the list (check the length
+# of the list by calling len(list(whatever)))
+
+# it wants us to just look at the 4th part - the body text
+body = list(html.children)[3]
+list(body.children)
+
+# now "isolate the p tag"??
+p = list(body.children)[1]
+
+# and FINALLY EXTRACT TEXT
+p.get_text()
+
+# now to do that en masse
+soup.find_all('p') # this p does not refer to the object
+
+
+#####  okay that was level 1
+#####  now level 2
+page = requests.get("http://dataquestio.github.io/web-scraping-pages/ids_and_classes.html")
+soup = BeautifulSoup(page.content, 'html.parser')
+soup
+
+# the web page that this is scraping has four lines, two non-bold ("inner
+# text') and two bold ("outer text"). the labels inner text and outer text
+# are classes, which I guess the user assigns when they're making it?
+soup.find_all('p', class_='outer-text')
+
+# then something about CSS selectors

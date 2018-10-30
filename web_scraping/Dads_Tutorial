@@ -1,0 +1,54 @@
+#! /usr/bin/env python3
+
+import urllib.request
+
+# PH: Get the contents of the web page
+
+URL = "https://docs.google.com/document/d/1DZTzWWcsRm815uoUpXWlxytaLrO8gKjEMhZ7fzV68Vc/edit"
+# EH: urllib.request.urlopen grabs the URL
+with urllib.request.urlopen(URL) as fp: # EH: fp is arbitrary
+    contents = fp.read().decode("utf-8") # EH: now you have the raw source code
+
+# PH: Now search through the text for the <script> lines
+# PH: that I want and print them:
+
+tag_to_match = '"s":"' # EH: this happens right beore the DOCS_modelCHUNK starts
+p = 0 
+
+while True: # PH: Loop forever
+    p = contents.find(tag_to_match, p) # EH: returns an index that updates to go through each one, starting at old p
+    if p == -1: # EH: this is from .find() - if it's ever -1, it's done
+        break
+
+    # PH: Skip past the starting tag
+    # EH: What's the starting tag?
+
+    p += len(tag_to_match) # EH: then you go 5 spaces ahead, because that's the tag
+
+    # Find the next quotation mark after this
+    # and extract the contents between the quotes
+
+    q = contents.find('"', p) # EH: returns a new index
+    chunk = contents[p:q] # EH: and that gives you the chunk!
+
+    # PH: Heuristics to remove special characters
+    # PH: (See Python Language Reference about raw string literals)
+
+    chunk = chunk.replace(r'''\n''', '\n')          # New line
+    chunk = chunk.replace(r'''\t''', ' ')           # Tab
+    chunk = chunk.replace(r'''\u000b''', '\n')      # Vertical tab
+    chunk = chunk.replace(r'''\u0026''', '&')       # Ampersand
+    chunk = chunk.replace(r'''\u0027''', "'")       # Smart apostrophe
+    chunk = chunk.replace(chr(0x2013), "-")         # M-dash
+    chunk = chunk.replace(chr(0x2019), "'")         # Smart apostrophe
+    chunk = chunk.replace(chr(0x201c), '"')         # Smart start quote
+    chunk = chunk.replace(chr(0x201d), '"')         # Smart end quote
+    chunk = chunk.replace(chr(0x2026), '...')       # Ellipsis
+
+    # PH: Print the modified chunk
+
+    print(chunk)
+
+    # PH: Resume search after this chunk
+
+    p = q # EH: now the old end of the chunk is the new start of the chunk

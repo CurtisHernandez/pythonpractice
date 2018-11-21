@@ -1,0 +1,21 @@
+def SortMyDudesPairwise(listToSort):
+    if len(listToSort) < 2:
+        return listToSort
+    elif len(listToSort) == 2:
+        return [min(listToSort), max(listToSort)]
+    else:
+        while True:
+            tc = 0 # trial counter for going up the list
+            for i in range(len(listToSort)-1):
+                if listToSort[i] > listToSort[i+1]:
+                    tc = 0
+                    print(listToSort)
+                    print(tc)
+                    listToSort.insert(i+2,listToSort[i])
+                    del listToSort[i]
+                else:
+                    tc += 1
+                    print(tc)
+            if tc == len(listToSort)-1:
+                break
+    return listToSort
